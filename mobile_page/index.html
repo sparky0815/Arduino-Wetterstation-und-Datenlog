@@ -1,0 +1,114 @@
+<html>
+	<head>
+	
+		<meta content="yes" name="apple-mobile-web-app-capable" />
+		<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type" />
+		<meta content="minimum-scale=1.0, width=device-width, maximum-scale=0.6667, user-scalable=no" name="viewport" />
+		<link href="css/style.css" type="text/css" rel="stylesheet" />
+		<script src="javascript/functions.js" type="text/javascript"></script>
+		<link rel="apple-touch-icon" href="homescreen.png"/>
+		<link href="startup.png" rel="apple-touch-startup-image" />
+	</head>
+		<body class="body">
+			
+			<!-- create top title bar -->
+			<div id="topbar" class="black">
+				<div id="title">TempFeuchteArduino</div>
+			</div>
+			
+			<!-- create content -->
+			<div id="content">	
+				<span class="graytitle2">Sensor Values</span>
+					<ul class="pageitem">
+						<li class="textbox">
+							<span class="name">DewPoint: <span id="myelement2"></span> °C</span>
+							<!--<input name="steak" type="checkbox" />-->
+						</li>
+						<li class="textbox">
+							<span class="name">Humidity: <span id="myelement1"></span> %</span>
+							<!--<input name="pizza" type="checkbox" />-->
+						</li>
+						<li class="textbox">
+							<span class="name">Temperature: <span id="myelement"></span> °C</span>
+							<!--<input name="chicken" type="checkbox" />-->
+						</li>
+					</ul>
+					<p align="center">
+					<font size="-2"><span style="color:white">2013 Christian Laux</span></font>
+					</p>
+			</div>	
+				
+				
+				<!--<h1>TempFeuchteArduino</h1>-->
+				<!--<h2><small>DewPoint:</small> <span id="myelement2"></span></h2>
+				<h2><small>Humidity:</small> <span id="myelement1"></span></h2>
+				<h2><small>Temperature:</small> <span id="myelement"></span></h2>-->
+			<!-- <a href="http://jquery.com/">jQuery</a> -->
+			<script src="jquery.js"></script>
+			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+			<script src="http://d23cj0cdvyoxg0.cloudfront.net/cosmjs-1.0.0.min.js"></script>
+				<script>
+					// Set the Cosm API key
+					cosm.setKey( "fwcl1bCOWlenyIY4MO_ZGtDJw9mSAKw5bWM3eUk2Ri94WT0g" );
+					
+					
+						// Make sure the document is ready to be handled
+						$(document).ready(function($) {
+
+						// Replace with your own values
+						var feedID        = 101375,					// Feed ID
+							getTemperature  = "Temperature";		// Datastream ID
+							selector      = "#myelement";			// Your element on the page
+							  
+						var getDewPoint  = "DewPoint";				// Datastream ID
+							selector2      = "#myelement2"; 		// Your element on the page
+		
+						var getHumidity  = "Humidity";      		// Datastream ID
+							selector1      = "#myelement1"; 		// Your element on the page
+						  
+						  
+						// get Temperature 
+						cosm.datastream.get (feedID, getTemperature, function ( datastream ) {
+							// WARNING: This code is only executed when we get a response back from Cosm, 
+							// it will likely execute after the rest your script
+							//
+							// NOTE: The variable "datastream" will contain all the datastream information 
+							// as an object,the structure can be found at: 
+							// http://cosm.com/docs/v2/datastream/show.html#examples
+
+							// Display the current value from the datastream
+							$(selector).html( datastream["current_value"] );
+
+							// Getting realtime! 
+							// The function associated with the subscribe method will be executed 
+							// every time there is an update to the datastream
+							cosm.datastream.subscribe( feedID, getTemperature, function ( event , datastream_updated ) {
+							  // Display the current value from the updated datastream
+							  $(selector).html( datastream_updated["current_value"] );
+							});
+
+						  });
+						  
+						// get DewPoint
+						cosm.datastream.get (feedID, getDewPoint, function ( datastream ) {
+								$(selector2).html( datastream["current_value"] );
+								cosm.datastream.subscribe( feedID, getDewPoint, function ( event , datastream_updated ) {
+							    $(selector2).html( datastream_updated["current_value"] );
+							});
+						  });
+						  
+						// get Humidity
+						cosm.datastream.get (feedID, getHumidity, function ( datastream ) {
+								$(selector1).html( datastream["current_value"] );
+								cosm.datastream.subscribe( feedID, getHumidity, function ( event , datastream_updated ) {
+							    $(selector1).html( datastream_updated["current_value"] );
+							});
+						  });
+
+						  // WARNING: Code here will continue executing while we get the datastream data from Cosm, 
+						  // use the function associated with datastream.get to work with the data 
+						  // once the request is complete
+						});
+				</script>
+		</body>
+</html>
