@@ -18,32 +18,65 @@
 			
 			<!-- create content -->
 			<div id="content">	
-				<span class="graytitle2">Sensor Values</span>
+				
+				
+				<!--create textbox for DewPoint-->
+				<span class="graytitle2">DewPoint</span>
 					<ul class="pageitem">
 						<li class="textbox">
-							<span class="name">DewPoint: <span id="myelement2"></span> °C</span>
+							<span class="name">current value: <span id="currentDewPoint"></span> %</span>
 							<!--<input name="steak" type="checkbox" />-->
 						</li>
 						<li class="textbox">
-							<span class="name">Humidity: <span id="myelement1"></span> %</span>
+							<span class="name">min value: <span id="minDewPoint"></span> %</span>
 							<!--<input name="pizza" type="checkbox" />-->
 						</li>
 						<li class="textbox">
-							<span class="name">Temperature: <span id="myelement"></span> °C</span>
+							<span class="name">max value: <span id="maxDewPoint"></span> %</span>
+							<!--<input name="chicken" type="checkbox" />-->
+						</li>
+					</ul>
+				
+				<!--create textbox for Humidity-->
+				<span class="graytitle2">Humidity</span>
+					<ul class="pageitem">
+						<li class="textbox">
+							<span class="name">current value: <span id="currentHumidity"></span> %</span>
+							<!--<input name="steak" type="checkbox" />-->
+						</li>
+						<li class="textbox">
+							<span class="name">min value: <span id="minHumidity"></span> %</span>
+							<!--<input name="pizza" type="checkbox" />-->
+						</li>
+						<li class="textbox">
+							<span class="name">max value: <span id="maxHumidity"></span> %</span>
+							<!--<input name="chicken" type="checkbox" />-->
+						</li>
+					</ul>
+			</div>	
+			
+			<!--create textbox for Temperature-->
+				<span class="graytitle2">Temperature</span>
+					<ul class="pageitem">
+						<li class="textbox">
+							<span class="name">current value: <span id="currentTemperature"></span> %</span>
+							<!--<input name="steak" type="checkbox" />-->
+						</li>
+						<li class="textbox">
+							<span class="name">min value: <span id="minTemperature"></span> %</span>
+							<!--<input name="pizza" type="checkbox" />-->
+						</li>
+						<li class="textbox">
+							<span class="name">max value: <span id="maxTemperature"></span> %</span>
 							<!--<input name="chicken" type="checkbox" />-->
 						</li>
 					</ul>
 					<p align="center">
-					<font size="-2"><span style="color:white">2013 Christian Laux</span></font>
+						<font size="-2"><span style="color:white">2013 Christian Laux</span></font>
 					</p>
+
 			</div>	
-				
-				
-				<!--<h1>TempFeuchteArduino</h1>-->
-				<!--<h2><small>DewPoint:</small> <span id="myelement2"></span></h2>
-				<h2><small>Humidity:</small> <span id="myelement1"></span></h2>
-				<h2><small>Temperature:</small> <span id="myelement"></span></h2>-->
-			<!-- <a href="http://jquery.com/">jQuery</a> -->
+			
 			<script src="jquery.js"></script>
 			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 			<script src="http://d23cj0cdvyoxg0.cloudfront.net/cosmjs-1.0.0.min.js"></script>
@@ -56,16 +89,24 @@
 						$(document).ready(function($) {
 
 						// Replace with your own values
-						var feedID        = 101375,					// Feed ID
-							getTemperature  = "Temperature";		// Datastream ID
-							selector      = "#myelement";			// Your element on the page
+						var feedID        = 101375,							// Feed ID
+							getTemperature  = "Temperature";				// Datastream ID
+							selector      = "#myelement";					// Your element on the page
+						var	getCurrentTemperatureSelector = "#currentTemperature";		//
+							getMinTemperatureSelector = "#minTemperature";		// 
+							getMaxTemperatureSelector = "#maxTemperature";		//
 							  
-						var getDewPoint  = "DewPoint";				// Datastream ID
-							selector2      = "#myelement2"; 		// Your element on the page
-		
-						var getHumidity  = "Humidity";      		// Datastream ID
-							selector1      = "#myelement1"; 		// Your element on the page
-						  
+						var getDewPoint  = "DewPoint";						// Datastream ID
+							selector2      = "#myelement2"; 				// Your element on the page
+						var	getCurrentDewPointSelector = "#currentDewPoint";		//
+							getMinDewPointSelector = "#minDewPoint";		// 
+							getMaxDewPointSelector = "#maxDewPoint";		//
+
+						var getHumidity  = "Humidity";      				// Datastream ID
+							selector1      = "#myelement1"; 				// Your element on the page
+						var	getCurrentHumiditySelector = "#currentHumidity";		//
+							getMinHumiditySelector = "#minHumidity";		// 
+							getMaxHumiditySelector = "#maxHumidity";		//
 						  
 						// get Temperature 
 						cosm.datastream.get (feedID, getTemperature, function ( datastream ) {
@@ -96,7 +137,32 @@
 							    $(selector2).html( datastream_updated["current_value"] );
 							});
 						  });
-						  
+				//////////////////////////////////////////////////////  
+							// get current DewPoint
+						cosm.datastream.get (feedID, getDewPoint, function ( datastream ) {
+								$(getCurrentDewPointSelector).html( datastream["current_value"] );
+								cosm.datastream.subscribe( feedID, getDewPoint, function ( event , datastream_updated ) {
+							    $(getCurrentDewPointSelector).html( datastream_updated["current_value"] );
+							});
+						  });
+						
+						// get min DewPoint
+						cosm.datastream.get (feedID, getDewPoint, function ( datastream ) {
+								$(getMinDewPointSelector).html( datastream["min_value"] );
+								cosm.datastream.subscribe( feedID, getDewPoint, function ( event , datastream_updated ) {
+							    $(getMinDewPointSelector).html( datastream_updated["min_value"] );
+							});
+						  });
+
+						// get max DewPoint
+						cosm.datastream.get (feedID, getDewPoint, function ( datastream ) {
+								$(getMaxDewPointSelector).html( datastream["max_value"] );
+								cosm.datastream.subscribe( feedID, getDewPoint, function ( event , datastream_updated ) {
+							    $(getMaxDewPointSelector).html( datastream_updated["max_value"] );
+							});
+						  });
+						
+				///////////////////////////////////////////
 						// get Humidity
 						cosm.datastream.get (feedID, getHumidity, function ( datastream ) {
 								$(selector1).html( datastream["current_value"] );
@@ -104,7 +170,56 @@
 							    $(selector1).html( datastream_updated["current_value"] );
 							});
 						  });
+						
+						// get current Humidity
+						cosm.datastream.get (feedID, getHumidity, function ( datastream ) {
+								$(getCurrentHumiditySelector).html( datastream["current_value"] );
+								cosm.datastream.subscribe( feedID, getHumidity, function ( event , datastream_updated ) {
+							    $(getCurrentHumiditySelector).html( datastream_updated["current_value"] );
+							});
+						  });
+						
+						// get min Humidity
+						cosm.datastream.get (feedID, getHumidity, function ( datastream ) {
+								$(getMinHumiditySelector).html( datastream["min_value"] );
+								cosm.datastream.subscribe( feedID, getHumidity, function ( event , datastream_updated ) {
+							    $(getMinHumiditySelector).html( datastream_updated["min_value"] );
+							});
+						  });
 
+						// get max Humidity
+						cosm.datastream.get (feedID, getHumidity, function ( datastream ) {
+								$(getMaxHumiditySelector).html( datastream["max_value"] );
+								cosm.datastream.subscribe( feedID, getHumidity, function ( event , datastream_updated ) {
+							    $(getMaxHumiditySelector).html( datastream_updated["max_value"] );
+							});
+						  });
+						  
+				//////////////////////////////////////////////////////  
+							// get current Temperature
+						cosm.datastream.get (feedID, getTemperature, function ( datastream ) {
+								$(getCurrentTemperatureSelector).html( datastream["current_value"] );
+								cosm.datastream.subscribe( feedID, getTemperature, function ( event , datastream_updated ) {
+							    $(getCurrentTemperatureSelector).html( datastream_updated["current_value"] );
+							});
+						  });
+						
+						// get min Temperature
+						cosm.datastream.get (feedID, getTemperature, function ( datastream ) {
+								$(getMinTemperatureSelector).html( datastream["min_value"] );
+								cosm.datastream.subscribe( feedID, getTemperature, function ( event , datastream_updated ) {
+							    $(getMinTemperatureSelector).html( datastream_updated["min_value"] );
+							});
+						  });
+
+						// get max Temperature
+						cosm.datastream.get (feedID, getTemperature, function ( datastream ) {
+								$(getMaxTemperatureSelector).html( datastream["max_value"] );
+								cosm.datastream.subscribe( feedID, getTemperature, function ( event , datastream_updated ) {
+							    $(getMaxTemperatureSelector).html( datastream_updated["max_value"] );
+							});
+						  });
+						  
 						  // WARNING: Code here will continue executing while we get the datastream data from Cosm, 
 						  // use the function associated with datastream.get to work with the data 
 						  // once the request is complete
