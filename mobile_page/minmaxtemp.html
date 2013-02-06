@@ -14,41 +14,30 @@
 			<!-- create top title bar -->
 			<div id="topbar" class="black">
 				<div id="title">TempFeuchteArduino</div>
+				<div id="leftnav"><a href="index.html">zurück</a> </div>
 			</div>
 			
 			<!-- create content -->
 			<div id="content">	
 								
-				<!--create textbox for DewPoint-->
-				<span class="graytitle2">DewPoint</span>
-					<ul class="pageitem">
-						<li class="menu"><a href="minmaxdewpoint.html">
-							<span class="name">current value: <span id="currentDewPoint"></span> °C</span><span class="arrow"></span></a>
-							<!--<input name="steak" type="checkbox" />-->
-						</li>
-						
-					</ul>
-				
-				<!--create textbox for Humidity-->
-				<span class="graytitle2">Humidity</span>
-					<ul class="pageitem">
-						<li class="menu"><a href="minmaxhumi.html">
-							<span class="name">current value: <span id="currentHumidity"></span> %</span><span class="arrow"></span></a>
-						
-					</ul>
-				
 				<!--create textbox for Temperature-->
 				<span class="graytitle2">Temperature</span>
 					<ul class="pageitem">
-						<li class="menu"><a href="minmaxtemp.html">
-							<span class="name">current value: <span id="currentTemperature"></span> °C</span><span class="arrow"></span></a>
-						
+						<li class="textbox">
+							<span class="name">min value: <span id="minTemperature"></span> °C</span>
+							<!--<input name="pizza" type="checkbox" />-->
+						</li>
+						<li class="textbox">
+							<span class="name">max value: <span id="maxTemperature"></span> °C</span>
+							<!--<input name="chicken" type="checkbox" />-->
+						</li>
 					</ul>
-					<p align="center">
+				<p align="center">
 						<font size="-2"><span style="color:white">2013 Christian Laux</span></font>
-					</p>
+				</p>
 			</div>	
-			
+					
+
 			
 			<script src="jquery.js"></script>
 			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
