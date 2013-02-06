@@ -14,59 +14,30 @@
 			<!-- create top title bar -->
 			<div id="topbar" class="black">
 				<div id="title">TempFeuchteArduino</div>
+				<div id="leftnav"><a href="index.html">zurück</a> </div>
 			</div>
 			
 			<!-- create content -->
 			<div id="content">	
-
-				<!--create textbox for Altitude-->
-				<span class="graytitle2">Altitude</span>
+								
+				<!--create textbox for Pressure-->
+				<span class="graytitle2">Pressure</span>
 					<ul class="pageitem">
-						<li class="menu"><a href="minmaxaltitude.html">
-							<span class="name">current value: <span id="currentAltitude"></span> m</span><span class="arrow"></span></a>
-							<!--<input name="steak" type="checkbox" />-->
+						<li class="textbox">
+							<span class="name">min value: <span id="minPressure"></span> hPa</span>
+							<!--<input name="pizza" type="checkbox" />-->
+						</li>
+						<li class="textbox">
+							<span class="name">max value: <span id="maxPressure"></span> hPa</span>
+							<!--<input name="chicken" type="checkbox" />-->
 						</li>
 					</ul>
-					
-				<!--create textbox for Barometric Pressure-->
-				<span class="graytitle2">Barometric Pressure</span>
-					<ul class="pageitem">
-						<li class="menu"><a href="minmaxpressure.html">
-							<span class="name">current value: <span id="currentPressure"></span> hPa</span><span class="arrow"></span></a>
-							<!--<input name="steak" type="checkbox" />-->
-						</li>
-					</ul>
-				
-				<!--create textbox for DewPoint-->
-				<span class="graytitle2">DewPoint</span>
-					<ul class="pageitem">
-						<li class="menu"><a href="minmaxdewpoint.html">
-							<span class="name">current value: <span id="currentDewPoint"></span> °C</span><span class="arrow"></span></a>
-							<!--<input name="steak" type="checkbox" />-->
-						</li>
-						
-					</ul>
-				
-				<!--create textbox for Humidity-->
-				<span class="graytitle2">Humidity</span>
-					<ul class="pageitem">
-						<li class="menu"><a href="minmaxhumi.html">
-							<span class="name">current value: <span id="currentHumidity"></span> %</span><span class="arrow"></span></a>
-						
-					</ul>
-				
-				<!--create textbox for Temperature-->
-				<span class="graytitle2">Temperature</span>
-					<ul class="pageitem">
-						<li class="menu"><a href="minmaxtemp.html">
-							<span class="name">current value: <span id="currentTemperature"></span> °C</span><span class="arrow"></span></a>
-						
-					</ul>
-					<p align="center">
+				<p align="center">
 						<font size="-2"><span style="color:white">2013 Christian Laux</span></font>
-					</p>
+				</p>
 			</div>	
-			
+					
+
 			
 			<script src="jquery.js"></script>
 			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -98,19 +69,19 @@
 						var	getCurrentHumiditySelector = "#currentHumidity";		//
 							getMinHumiditySelector = "#minHumidity";		// 
 							getMaxHumiditySelector = "#maxHumidity";		//
-						
+							
 						var	getAltitude  = "Altitude";
-							selector3      = "#myelement3";
+							selector      = "#myelement3";
 							getCurrentAltitudeSelector = "#currentAltitude";		//
 							getMinAltitudeSelector = "#minAltitude";		// 
 							getMaxAltitudeSelector = "#maxAltitude";		//
-							
+						
 						var	getPressure  = "BarometricPressure";
-							selector4      = "#myelement4";
+							selector      = "#myelement4";
 							getCurrentPressureSelector = "#currentPressure";		//
 							getMinPressureSelector = "#minPressure";		// 
 							getMaxPressureSelector = "#maxPressure";		//	
-							  
+						  
 						// get Temperature 
 						cosm.datastream.get (feedID, getTemperature, function ( datastream ) {
 							// WARNING: This code is only executed when we get a response back from Cosm, 
@@ -222,7 +193,9 @@
 							    $(getMaxTemperatureSelector).html( datastream_updated["max_value"] );
 							});
 						  });
-				
+						  
+						  
+										  
 				//////////////////////////////////////////////////////  
 							// get current Altitude
 						cosm.datastream.get (feedID, getAltitude, function ( datastream ) {
@@ -246,9 +219,9 @@
 								cosm.datastream.subscribe( feedID, getAltitude, function ( event , datastream_updated ) {
 							    $(getMaxAltitudeSelector).html( datastream_updated["max_value"] );
 							});
-						  });		  
+						  });
 						  
-					//////////////////////////////////////////////////////  
+								//////////////////////////////////////////////////////  
 							// get current Pressure
 						cosm.datastream.get (feedID, getPressure, function ( datastream ) {
 								$(getCurrentPressureSelector).html( datastream["current_value"] );
