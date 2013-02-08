@@ -2,40 +2,42 @@
 #include <Ethernet.h>
 #include <HttpClient.h>
 #include <Cosm.h>
-#include <DHT.h>
+//#include <DHT.h>
+#include <Adafruit_BMP085.h>
+#include <Wire.h>
 
 // MAC address for your ethernet shield
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 
-// your Cosm key and FEED_ID to upload your data
-char cosmKey[] = "pXk-qzhIN5qhHRojPUq6y7-8Uc6SAKx2eVdjb05ld3ZFMD0g"; 							// replace INSERT_YOUR_COSM_KEY with your key
-//int FEED_ID = 101375; 									//replace INSERT_OUR_FEED_ID with your feed id
+//you cosm API-key
+char cosmKey[] = "INSERT_YOUR_COSM_KEY";
 
-#define DHTPIN 2
-#define DHTPIN_2 3
+// define Arduino PIN (digital) and define sensor
+//#define DHTPIN 2
+//#define DHTTYPE DHT22
 
-#define DHTTYPE DHT22
-
-DHT dht(DHTPIN, DHTTYPE);
-DHT dht_2(DHTPIN_2, DHTTYPE);
+//DHT dht(DHTPIN, DHTTYPE);
+Adafruit_BMP085 bmp;
 
 // Define the strings for our datastream IDs
-char sensorId[] = "Temperature";
+/*char sensorId[] = "Temperature";
 char bufferId[] = "Humidity";
-char dewId[] = "DewPoint";
-char outTempId[] = "outTemperature";
-char outHumidityId[] = "outHumidity";
+char dewId[] = "DewPoint";*/
+char pressureId[] = "Pressure";
+char altitudeId[] = "Altitude";
+char bmpTempId[] = "TemperatureBMP";
 
   CosmDatastream datastreams[] = {
-  CosmDatastream(sensorId, strlen(sensorId), DATASTREAM_FLOAT),
-  CosmDatastream(bufferId, strlen(bufferId), DATASTREAM_FLOAT),
-  CosmDatastream(dewId, strlen(dewId), DATASTREAM_FLOAT),
-  CosmDatastream(outTempId, strlen(outTempId), DATASTREAM_FLOAT),
-  CosmDatastream(outHumidityId, strlen(outHumidityId), DATASTREAM_FLOAT),
+ // CosmDatastream(sensorId, strlen(sensorId), DATASTREAM_FLOAT),
+ // CosmDatastream(bufferId, strlen(bufferId), DATASTREAM_FLOAT),
+ // CosmDatastream(dewId, strlen(dewId), DATASTREAM_FLOAT),
+  CosmDatastream(pressureId, strlen(pressureId), DATASTREAM_FLOAT),
+  CosmDatastream(altitudeId, strlen(altitudeId), DATASTREAM_FLOAT),
+  CosmDatastream(bmpTempId, strlen(bmpTempId), DATASTREAM_FLOAT),
 };
 
 // Finally, wrap the datastreams into a feed
-CosmFeed feed(101375, datastreams, 5 /* number of datastreams */); // replace INSERT_OUR_FEED_ID with your feed id
+CosmFeed feed(INSERT_YOUR_FEED_ID, datastreams, 3 /* number of datastreams */); // replace INSERT_OUR_FEED_ID with your feed id
 
 EthernetClient client;
 CosmClient cosmclient(client);
@@ -44,13 +46,17 @@ void setup() {
    
   Serial.begin(9600);
   
-  dht.begin();
-  //dht_2.begin();
+  //dht.begin();
   
   Serial.println("Starting multiple datastream upload to Cosm...");
   Serial.println();
 
   while (Ethernet.begin(mac) != 1)
+  
+  if (!bmp.begin()) {
+	Serial.println("Could not find a valid BMP085 sensor, check wiring!");
+	while (1) {}
+  }
   {
     Serial.println("Error getting IP address via DHCP, trying again...");
     delay(15000);
@@ -58,7 +64,7 @@ void setup() {
 }
 
 void loop() {
-  
+/*  
 // get temperature from dht22; put to datastream and serial-monitor
   float sensorValue = dht.readTemperature();
   datastreams[0].setFloat(sensorValue);
@@ -78,22 +84,27 @@ void loop() {
   datastreams[2].setFloat(dewPoint);
   Serial.print("DewPoint is ");
   Serial.println(datastreams[2].getFloat());
+*/ 
  
  
- 
-// get outside temperature from dht22; put to datastream and serial-monitor
-  float sensorValue3 = dht_2.readTemperature();
-  datastreams[3].setFloat(sensorValue3);
-  Serial.print("Read sensor value ");
-  Serial.println(datastreams[3].getFloat());
+// get temperature from BMP085; put to datastream and serial-monitor
+  float sensorValue0 = bmp.readTemperature();
+  datastreams[0].setFloat(sensorValue0);
+  Serial.print("Read sensor value (Temperature BMP) ");
+  Serial.println(datastreams[0].getFloat());
 
 
-// get outside humidity from dht22; put to datastream and serial-monitor
-  float sensorValue4 = dht_2.readHumidity();
-  datastreams[4].setFloat(sensorValue4);
-  Serial.print("Read sensor value ");
-  Serial.println(datastreams[4].getFloat());  
+// get pressure from bmp085; put to datastream and serial-monitor
+  float sensorValue1 = bmp.readPressure();
+  datastreams[1].setFloat(sensorValue1);
+  Serial.print("Read sensor (Pressure BMP): ");
+  Serial.println(datastreams[1].getFloat());  
 
+// get altitude from bmp085; put to datastream and serial-monitor
+  float sensorValue2 = bmp.readAltitude();
+  datastreams[2].setFloat(sensorValue2);
+  Serial.print("Read sensor (Altitude BMP): ");
+  Serial.println(datastreams[2].getFloat());  
 
 
 // upload data
