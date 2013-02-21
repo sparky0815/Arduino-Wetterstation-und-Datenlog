@@ -3,6 +3,8 @@
 #include <HttpClient.h>
 #include <Cosm.h>
 #include <DHT.h>
+#include <Wire.h>
+#include <Adafruit_BMP085.h>
 
 // MAC address for your ethernet shield
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
@@ -19,19 +21,23 @@ char cosmKey[] = "pXk-qzhIN5qhHRojPUq6y7-8Uc6SAKx2eVdjb05ld3ZFMD0g"; 							// r
 DHT dht(DHTPIN, DHTTYPE);
 DHT dht_2(DHTPIN_2, DHTTYPE);
 
+Adafruit_BMP085 bmp;
+
 // Define the strings for our datastream IDs
-char sensorId[] = "Temperature";
-char bufferId[] = "Humidity";
-char dewId[] = "DewPoint";
-char outTempId[] = "outTemperature";
-char outHumidityId[] = "outHumidity";
+char sensorId[] = "innenTemperatur";
+char bufferId[] = "innenLuftfeuchte";
+//char dewId[] = "DewPoint";
+char outTempId[] = "aussenTemperature";
+char outHumidityId[] = "aussenLuftfeuchte";
+char pressureId[] = "Luftdruck";
 
   CosmDatastream datastreams[] = {
   CosmDatastream(sensorId, strlen(sensorId), DATASTREAM_FLOAT),
   CosmDatastream(bufferId, strlen(bufferId), DATASTREAM_FLOAT),
-  CosmDatastream(dewId, strlen(dewId), DATASTREAM_FLOAT),
+ // CosmDatastream(dewId, strlen(dewId), DATASTREAM_FLOAT),
   CosmDatastream(outTempId, strlen(outTempId), DATASTREAM_FLOAT),
   CosmDatastream(outHumidityId, strlen(outHumidityId), DATASTREAM_FLOAT),
+  CosmDatastream(pressureId, strlen(pressureId), DATASTREAM_FLOAT),
 };
 
 // Finally, wrap the datastreams into a feed
@@ -55,6 +61,11 @@ void setup() {
     Serial.println("Error getting IP address via DHCP, trying again...");
     delay(15000);
   }
+  
+  if (!bmp.begin()) {
+	Serial.println("Could not find a valid BMP085 sensor, check wiring!");
+	while (1) {}
+  }
 }
 
 void loop() {
@@ -72,28 +83,36 @@ void loop() {
   Serial.print("Read sensor value ");
   Serial.println(datastreams[1].getFloat());
 
-
+/*
 // calculate DewPoint; put to datastream and serial-monitor 
   float dewPoint = (237.3 * sensorValue) / (17.271 - sensorValue) / 100 * (-1);
   datastreams[2].setFloat(dewPoint);
   Serial.print("DewPoint is ");
   Serial.println(datastreams[2].getFloat());
- 
+*/ 
  
  
 // get outside temperature from dht22; put to datastream and serial-monitor
   float sensorValue3 = dht_2.readTemperature();
-  datastreams[3].setFloat(sensorValue3);
+  datastreams[2].setFloat(sensorValue3);
   Serial.print("Read sensor value ");
-  Serial.println(datastreams[3].getFloat());
+  Serial.println(datastreams[2].getFloat());
 
 
 // get outside humidity from dht22; put to datastream and serial-monitor
   float sensorValue4 = dht_2.readHumidity();
-  datastreams[4].setFloat(sensorValue4);
+  datastreams[3].setFloat(sensorValue4);
+  Serial.print("Read sensor value ");
+  Serial.println(datastreams[3].getFloat());  
+  
+// airpressure and correct value from bmp085; put to datastream and serial-monitor
+  float expo = 0.9607413; // calculatet exp(-höhe/7330m)
+  float pressureNN = (bmp.readPressure() / 100 ) / expo;
+  float sensorValue5 = pressureNN;
+  datastreams[4].setFloat(sensorValue5);
   Serial.print("Read sensor value ");
   Serial.println(datastreams[4].getFloat());  
-
+    
 
 
 // upload data
@@ -105,6 +124,6 @@ void loop() {
   Serial.println();
  
 //wait 60000 ms 
-  delay(10000);
+  delay(60000);
 }
 
