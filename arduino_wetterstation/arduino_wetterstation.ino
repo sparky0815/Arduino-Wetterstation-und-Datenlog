@@ -27,7 +27,7 @@ Adafruit_BMP085 bmp;
 char sensorId[] = "innenTemperatur";
 char bufferId[] = "innenLuftfeuchte";
 //char dewId[] = "DewPoint";
-char outTempId[] = "aussenTemperature";
+char outTempId[] = "aussenTemperatur";
 char outHumidityId[] = "aussenLuftfeuchte";
 char pressureId[] = "Luftdruck";
 
